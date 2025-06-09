@@ -4,7 +4,7 @@ namespace DbTestHarness.Infrastructure;
 
 public class DryRunner : IRunner
 {
-    public async Task<bool> Execute(SqlServer sqlServer)
+    public async Task<bool> Execute(Server server)
     {
         await Task.Delay(500);
 

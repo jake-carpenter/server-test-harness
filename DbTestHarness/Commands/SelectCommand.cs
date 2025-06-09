@@ -31,14 +31,14 @@ public class SelectCommand(UserConfig userConfig, SqlServerRunner sqlServerRunne
         ctx.Status(option.Label);
         ctx.Spinner(Spinner.Known.Dots);
 
-        if (await runner.Execute(option.Server!.Value))
+        if (await runner.Execute(option.Server!))
         {
-            AnsiConsole.MarkupLineInterpolated($"[green]✔[/] [blue]{option.Server.ToString()}[/]");
+            AnsiConsole.MarkupLineInterpolated($"[green]✔[/] [blue]{option.Server!.ToString()}[/]");
 
             return;
         }
 
-        AnsiConsole.MarkupLineInterpolated($"[red]✘[/] [blue]{option.Server.ToString()}[/]");
+        AnsiConsole.MarkupLineInterpolated($"[red]✘[/] [blue]{option.Server!.ToString()}[/]");
     }
 
     private static MultiSelectionPrompt<ISelectionOption> BuildPromptWithGroups(

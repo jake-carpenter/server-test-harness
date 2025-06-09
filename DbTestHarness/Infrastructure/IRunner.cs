@@ -4,5 +4,5 @@ namespace DbTestHarness.Infrastructure;
 
 public interface IRunner
 {
-    Task<bool> Execute(SqlServer sqlServer);
+    Task<bool> Execute(Server server);
 }
