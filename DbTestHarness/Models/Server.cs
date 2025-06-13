@@ -1,3 +1,7 @@
 namespace DbTestHarness.Models;
 
-public record Server(string Name);
+public abstract record Server(string Name)
+{
+    public abstract string GetStatusLabel(string groupName);
+    public abstract string GetOptionLabel();
+}

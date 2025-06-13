@@ -4,10 +4,10 @@ namespace DbTestHarness.Infrastructure;
 
 public class DryRunner : IRunner
 {
-    public async Task<bool> Execute(Server server)
+    public async Task<RunResult> Execute(Server server)
     {
         await Task.Delay(500);
 
-        return true;
+        return RunResult.Success();
     }
 }

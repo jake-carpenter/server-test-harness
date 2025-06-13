@@ -5,17 +5,32 @@ namespace DbTestHarness.Models;
 public class UserConfig
 {
     public required ServerGroup[] SqlServerGroups { get; init; }
-    public required SqlServer[] Servers { get; init; }
 
     public static async Task<UserConfig> FromFile(string filePath)
     {
         var path = Path.Combine(Environment.CurrentDirectory, filePath);
+
+        return await Read(path);
+    }
+
+    public static async Task<UserConfig> FromConfigDirectory()
+    {
+        var home = Environment.GetEnvironmentVariable("HOME");
+        var path = Path.Combine(home ?? "./", ".config", "test-harness", "config.json");
+
+        return await Read(path);
+    }
+
+    private static async Task<UserConfig> Read(string path)
+    {
         UserConfig? config = null;
 
         if (File.Exists(path))
         {
             var stream = File.OpenRead(path);
-            config = await JsonSerializer.DeserializeAsync<UserConfig>(stream, JsonSerializerOptions.Web);
+            config = await JsonSerializer.DeserializeAsync<UserConfig>(
+                stream,
+                JsonSerializerOptions.Web);
         }
 
         if (config is null)
@@ -23,10 +38,4 @@ public class UserConfig
 
         return config;
     }
-}
-
-public class ServerGroup
-{
-    public required string Name { get; init; }
-    public required SqlServer[] Servers { get; init; }
 }

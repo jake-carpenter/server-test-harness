@@ -10,10 +10,12 @@ var registrar = new TypeRegistrar(services);
 var app = new CommandApp(registrar);
 
 // DI registrations
-var userConfig = await UserConfig.FromFile("config.json");
+var userConfig = await UserConfig.FromConfigDirectory();
 services.AddSingleton<UserConfig>(_ => userConfig);
-services.AddSingleton<SqlServerRunner>();
-services.AddSingleton<DryRunner>();
+services.AddSingleton<IRunner, SqlServerRunner>();
+services.AddSingleton<IRunner, DryRunner>();
+services.AddSingleton<RunnerFactory>();
+services.AddSingleton<RunnerStatus>();
 
 app.Configure(cfg =>
 {
