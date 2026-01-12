@@ -28,4 +28,32 @@ public class SqlServerRunner : IRunner
             return RunResult.Failure(ex);
         }
     }
+
+    public string GetProgressDescription(Server server)
+    {
+        if (server is not SqlServerWithGroup sqlServer)
+            return server.Name;
+
+        return $"[blue]{sqlServer.GroupName}[/] | [yellow]{sqlServer.Name}[/] | {sqlServer.Host}";
+    }
+
+    public string GetResultDescription(Server server, RunResult result)
+    {
+        if (server is not SqlServerWithGroup sqlServer)
+            return server.Name;
+
+        var (color, symbol) = result.Succeeded
+            ? ("green", "✔")
+            : ("red", "✘");
+
+        return $"[{color}]{symbol}[/] [blue]{sqlServer.GroupName}[/] | [yellow]{sqlServer.Name}[/] | {sqlServer.Host}";
+    }
+
+    public string GetExceptionDisplayLine(Server server)
+    {
+        if (server is not SqlServerWithGroup sqlServer)
+            return server.Name;
+
+        return $"[blue]{sqlServer.GroupName}[/] | [yellow]{sqlServer.Name}[/] | {sqlServer.Host}";
+    }
 }

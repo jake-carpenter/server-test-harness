@@ -24,7 +24,7 @@ public class RunnerStatus(RunnerFactory runnerFactory)
                 new TaskDescriptionColumn { Alignment = Justify.Left })
             .StartAsync(async ctx =>
             {
-                var progressTasks = ApplyTasks(ctx, servers);
+                var progressTasks = ApplyTasks(ctx, servers, settings);
                 var tasks = servers
                     .Where(progressTasks.ContainsKey)
                     .Select(server => ExecuteServerAsync(server, progressTasks[server], settings, results));
@@ -34,7 +34,7 @@ public class RunnerStatus(RunnerFactory runnerFactory)
 
         if (settings.Debug)
         {
-            DisplayExceptionSummary(results);
+            DisplayExceptionSummary(results, settings);
         }
 
         var hasFailure = results.Values.Any(r => !r.Succeeded);
@@ -42,15 +42,13 @@ public class RunnerStatus(RunnerFactory runnerFactory)
         return hasFailure ? 1 : 0;
     }
 
-    private static Dictionary<Server, ProgressTask> ApplyTasks(ProgressContext ctx, Server[] servers)
+    private Dictionary<Server, ProgressTask> ApplyTasks(ProgressContext ctx, Server[] servers, Settings settings)
     {
         var progressTasks = new Dictionary<Server, ProgressTask>();
         foreach (var server in servers)
         {
-            if (server is not SqlServerWithGroup sqlServer)
-                continue;
-
-            var description = $"[blue]{sqlServer.GroupName}[/] | [yellow]{sqlServer.Name}[/] | {sqlServer.Host}";
+            var runner = runnerFactory.GetRunner(server, settings);
+            var description = runner.GetProgressDescription(server);
 
             progressTasks[server] = ctx.AddTask(description, autoStart: true, maxValue: 1);
         }
@@ -64,28 +62,20 @@ public class RunnerStatus(RunnerFactory runnerFactory)
         Settings settings,
         Dictionary<Server, RunResult> results)
     {
-        if (server is not SqlServerWithGroup sqlServer)
-            return;
-
-        var runner = runnerFactory.GetRunner(sqlServer, settings);
-        var result = await runner.Execute(sqlServer);
+        var runner = runnerFactory.GetRunner(server, settings);
+        var result = await runner.Execute(server);
 
         lock (results)
         {
             results[server] = result;
         }
 
-        var (color, symbol) = result.Succeeded
-            ? ("green", "✔")
-            : ("red", "✘");
-
-        progressTask.Description =
-            $"[{color}]{symbol}[/] [blue]{sqlServer.GroupName}[/] | [yellow]{sqlServer.Name}[/] | {sqlServer.Host}";
+        progressTask.Description = runner.GetResultDescription(server, result);
         progressTask.Value = 1;
         progressTask.StopTask();
     }
 
-    private static void DisplayExceptionSummary(Dictionary<Server, RunResult> results)
+    private void DisplayExceptionSummary(Dictionary<Server, RunResult> results, Settings settings)
     {
         var exceptions = results
             .Where(kvp => !kvp.Value.Succeeded && kvp.Value.Exception != null)
@@ -100,12 +90,11 @@ public class RunnerStatus(RunnerFactory runnerFactory)
 
         foreach (var (server, result) in exceptions)
         {
-            if (server is not SqlServerWithGroup sqlServer)
-                continue;
-
+            var runner = runnerFactory.GetRunner(server, settings);
             var exceptionMessage = result.Exception?.Message ?? "Unknown error";
             var escapedMessage = Markup.Escape(exceptionMessage);
-            AnsiConsole.MarkupLine($"[blue]{sqlServer.GroupName}[/] | [yellow]{sqlServer.Name}[/] | {sqlServer.Host}");
+            
+            AnsiConsole.MarkupLine(runner.GetExceptionDisplayLine(server));
             AnsiConsole.WriteLine();
 
             var exceptionText = new Markup($"[red]{escapedMessage}[/]");

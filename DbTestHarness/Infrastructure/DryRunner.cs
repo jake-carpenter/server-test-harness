@@ -10,4 +10,23 @@ public class DryRunner : IRunner
 
         return RunResult.Success();
     }
+
+    public string GetProgressDescription(Server server)
+    {
+        return server.Name;
+    }
+
+    public string GetResultDescription(Server server, RunResult result)
+    {
+        var (color, symbol) = result.Succeeded
+            ? ("green", "✔")
+            : ("red", "✘");
+
+        return $"[{color}]{symbol}[/] {server.Name}";
+    }
+
+    public string GetExceptionDisplayLine(Server server)
+    {
+        return server.Name;
+    }
 }
