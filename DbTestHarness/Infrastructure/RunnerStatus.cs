@@ -32,7 +32,10 @@ public class RunnerStatus(RunnerFactory runnerFactory)
                 await Task.WhenAll(tasks);
             });
 
-        DisplayExceptionSummary(results);
+        if (settings.Debug)
+        {
+            DisplayExceptionSummary(results);
+        }
 
         var hasFailure = results.Values.Any(r => !r.Succeeded);
 
