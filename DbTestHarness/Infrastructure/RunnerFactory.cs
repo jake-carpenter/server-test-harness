@@ -1,17 +1,12 @@
 using DbTestHarness.Models;
+using DbTestHarness.Runners;
 
 namespace DbTestHarness.Infrastructure;
 
 public class RunnerFactory(IEnumerable<IRunner> runners)
 {
-    public IRunner GetRunner(Server server, Settings settings)
+    public IRunner GetRunner(Server server, RunSettings settings)
     {
-        if (settings.DryRun)
-        {
-            return runners.OfType<DryRunner>().FirstOrDefault()
-                   ?? throw new InvalidOperationException("DryRunner not found.");
-        }
-
         IRunner? runner = server switch
         {
             SqlServer => runners.OfType<SqlServerRunner>().FirstOrDefault(),

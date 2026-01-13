@@ -3,7 +3,7 @@ using Spectre.Console.Cli;
 
 namespace DbTestHarness.Models;
 
-public sealed class Settings : CommandSettings
+public sealed class RunSettings : CommandSettings
 {
     [CommandOption("-b|--debug")]
     [Description("Show detailed exception information")]

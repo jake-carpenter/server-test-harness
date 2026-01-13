@@ -5,7 +5,7 @@ namespace DbTestHarness.Infrastructure;
 
 public class RunnerStatus(RunnerFactory runnerFactory)
 {
-    public async Task<int> Start(Server[] servers, Settings settings)
+    public async Task<int> Start(Server[] servers, RunSettings settings)
     {
         if (servers.Length == 0)
         {
@@ -26,7 +26,7 @@ public class RunnerStatus(RunnerFactory runnerFactory)
             {
                 var progressTasks = ApplyTasks(ctx, servers, settings);
                 var tasks = servers
-                    .Where(group => progressTasks.ContainsKey(group))
+                    .Where(progressTasks.ContainsKey)
                     .Select(server => ExecuteServerAsync(server, progressTasks[server], settings, results));
 
                 await Task.WhenAll(tasks);
@@ -42,13 +42,13 @@ public class RunnerStatus(RunnerFactory runnerFactory)
         return hasFailure ? 1 : 0;
     }
 
-    private Dictionary<Server, ProgressTask> ApplyTasks(ProgressContext ctx, Server[] servers, Settings settings)
+    private Dictionary<Server, ProgressTask> ApplyTasks(ProgressContext ctx, Server[] servers, RunSettings settings)
     {
         var progressTasks = new Dictionary<Server, ProgressTask>();
         foreach (var server in servers)
         {
             var runner = runnerFactory.GetRunner(server, settings);
-            var description = runner.GetProgressDescription(server);
+            var description = runner.Formatter.FormatInProgressLine(server);
 
             progressTasks[server] = ctx.AddTask(description, autoStart: true, maxValue: 1);
         }
@@ -59,26 +59,26 @@ public class RunnerStatus(RunnerFactory runnerFactory)
     private async Task ExecuteServerAsync(
         Server server,
         ProgressTask progressTask,
-        Settings settings,
+        RunSettings settings,
         Dictionary<Server, RunResult> results)
     {
         var runner = runnerFactory.GetRunner(server, settings);
-        var result = await runner.Execute(server);
+        var result = await runner.Execute(server, settings);
 
         lock (results)
         {
             results[server] = result;
         }
 
-        progressTask.Description = runner.GetResultDescription(server, result);
+        progressTask.Description = runner.Formatter.FormatResultLine(server, result);
         progressTask.Value = 1;
         progressTask.StopTask();
     }
 
-    private void DisplayExceptionSummary(Dictionary<Server, RunResult> results, Settings settings)
+    private void DisplayExceptionSummary(Dictionary<Server, RunResult> results, RunSettings settings)
     {
         var exceptions = results
-            .Where(kvp => !kvp.Value.Succeeded && kvp.Value.Exception != null)
+            .Where(kvp => kvp.Value is { Succeeded: false, Exception: not null })
             .ToList();
 
         if (exceptions.Count == 0)
@@ -94,7 +94,7 @@ public class RunnerStatus(RunnerFactory runnerFactory)
             var exceptionMessage = result.Exception?.Message ?? "Unknown error";
             var escapedMessage = Markup.Escape(exceptionMessage);
             
-            AnsiConsole.MarkupLine(runner.GetExceptionDisplayLine(server));
+            AnsiConsole.MarkupLine(runner.Formatter.FormatExceptionLine(server));
             AnsiConsole.WriteLine();
 
             var exceptionText = new Markup($"[red]{escapedMessage}[/]");

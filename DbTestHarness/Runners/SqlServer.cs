@@ -1,4 +1,6 @@
-namespace DbTestHarness.Models;
+using DbTestHarness.Models;
+
+namespace DbTestHarness.Runners;
 
 public record SqlServer : Server
 {
