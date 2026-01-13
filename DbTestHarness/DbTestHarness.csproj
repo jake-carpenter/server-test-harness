@@ -15,8 +15,8 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
-      <PackageReference Include="Spectre.Console" Version="0.50.0" />
-      <PackageReference Include="Spectre.Console.Cli" Version="0.50.0" />
+      <PackageReference Include="Spectre.Console" Version="0.54.0" />
+      <PackageReference Include="Spectre.Console.Cli" Version="0.53.1" />
     </ItemGroup>
 
     <ItemGroup>

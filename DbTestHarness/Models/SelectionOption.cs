@@ -7,7 +7,7 @@ public interface ISelectionOption
 
 public record ServerOption(Server Server) : ISelectionOption
 {
-    public string Label => Server.GetOptionLabel();
+    public string Label => $"[white]{Server.Instance}[/] [grey]{Server.Host}[/]";
 }
 
 public record GroupOption(string Label) : ISelectionOption;

@@ -6,7 +6,7 @@ namespace DbTestHarness.Commands;
 
 public class ConfigCommand(UserConfig userConfig) : Command
 {
-    public override int Execute(CommandContext context)
+    public override int Execute(CommandContext context, CancellationToken cancellationToken)
     {
         var grid = new Grid()
             .AddColumn(new GridColumn().Alignment(Justify.Right))
@@ -14,18 +14,18 @@ public class ConfigCommand(UserConfig userConfig) : Command
             .AddColumn(new GridColumn().Alignment(Justify.Left))
             .AddRow(
                 new Markup("[grey]Group[/]"),
-                new Markup("[grey]Name[/]"),
+                new Markup("[grey]Instance[/]"),
                 new Markup("[grey]Host[/]"));
 
-        grid.Expand = false;
+        var groups = new ServerGroups(userConfig.Servers);
 
-        foreach (var group in userConfig.SqlServerGroups)
+        foreach (var (_, group) in groups)
         {
             foreach (var server in group.Servers)
             {
                 grid.AddRow(
-                    new Markup($"[blue]{group.Name}[/]"),
-                    new Markup($"[yellow]{server.Name}[/]"),
+                    new Markup($"[blue]{server.GroupName}[/]"),
+                    new Markup($"[yellow]{server.Instance}[/]"),
                     new Markup($"[white]{server.Host}[/]"));
             }
         }

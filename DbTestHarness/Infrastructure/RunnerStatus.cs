@@ -26,7 +26,7 @@ public class RunnerStatus(RunnerFactory runnerFactory)
             {
                 var progressTasks = ApplyTasks(ctx, servers, settings);
                 var tasks = servers
-                    .Where(progressTasks.ContainsKey)
+                    .Where(group => progressTasks.ContainsKey(group))
                     .Select(server => ExecuteServerAsync(server, progressTasks[server], settings, results));
 
                 await Task.WhenAll(tasks);

@@ -7,9 +7,9 @@ namespace DbTestHarness.Commands;
 
 public class SelectCommand(UserConfig userConfig, RunnerStatus runnerStatus) : AsyncCommand<Settings>
 {
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
-        var selected = AnsiConsole.Prompt(BuildPromptWithGroups(userConfig.SqlServerGroups));
+        var selected = AnsiConsole.Prompt(BuildPromptWithGroups(userConfig.Servers));
         var servers = selected.OfType<ServerOption>().Select(x => x.Server).ToArray();
         var result = await runnerStatus.Start(servers, settings);
 
@@ -17,7 +17,7 @@ public class SelectCommand(UserConfig userConfig, RunnerStatus runnerStatus) : A
     }
 
     private static MultiSelectionPrompt<ISelectionOption> BuildPromptWithGroups(
-        ServerGroup[] groups)
+        Server[] servers)
     {
         const string instructions =
             """
@@ -39,10 +39,10 @@ public class SelectCommand(UserConfig userConfig, RunnerStatus runnerStatus) : A
                 _ => opt.Label
             });
 
-        foreach (var group in groups)
+        foreach (var group in servers.GroupBy((s) => s.GroupName))
         {
-            var serverOptions = group.ServerWithGroups.Select(s => new ServerOption(s));
-            prompt.AddChoiceGroup(new GroupOption(group.Name), serverOptions);
+            var serverOptions = group.Select(s => new ServerOption(s));
+            prompt.AddChoiceGroup(new GroupOption(group.Key), serverOptions);
         }
 
         return prompt;

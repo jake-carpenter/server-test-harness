@@ -4,14 +4,7 @@ namespace DbTestHarness.Models;
 
 public class UserConfig
 {
-    public required ServerGroup[] SqlServerGroups { get; init; }
-
-    public static async Task<UserConfig> FromFile(string filePath)
-    {
-        var path = Path.Combine(Environment.CurrentDirectory, filePath);
-
-        return await Read(path);
-    }
+    public required Server[] Servers { get; init; }
 
     public static async Task<UserConfig> FromConfigDirectory()
     {
@@ -28,9 +21,7 @@ public class UserConfig
         if (File.Exists(path))
         {
             var stream = File.OpenRead(path);
-            config = await JsonSerializer.DeserializeAsync<UserConfig>(
-                stream,
-                JsonSerializerOptions.Web);
+            config = await JsonSerializer.DeserializeAsync<UserConfig>(stream, JsonSerializerOptions.Web);
         }
 
         if (config is null)

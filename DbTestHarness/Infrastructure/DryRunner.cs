@@ -13,7 +13,7 @@ public class DryRunner : IRunner
 
     public string GetProgressDescription(Server server)
     {
-        return server.Name;
+        return server.Instance;
     }
 
     public string GetResultDescription(Server server, RunResult result)
@@ -22,11 +22,11 @@ public class DryRunner : IRunner
             ? ("green", "✔")
             : ("red", "✘");
 
-        return $"[{color}]{symbol}[/] {server.Name}";
+        return $"[{color}]{symbol}[/] {server.Instance}";
     }
 
     public string GetExceptionDisplayLine(Server server)
     {
-        return server.Name;
+        return server.Instance;
     }
 }

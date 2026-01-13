@@ -6,13 +6,9 @@ namespace DbTestHarness.Commands;
 
 public class AllCommand(UserConfig userConfig, RunnerStatus runnerStatus) : AsyncCommand<Settings>
 {
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
-        var servers = userConfig.SqlServerGroups
-            .SelectMany(group => group.ServerWithGroups)
-            .ToArray<Server>();
-
-        var result = await runnerStatus.Start(servers, settings);
+        var result = await runnerStatus.Start(userConfig.Servers, settings);
 
         return result;
     }

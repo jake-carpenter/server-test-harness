@@ -1,5 +1,4 @@
-﻿using DbTestHarness;
-using DbTestHarness.Commands;
+﻿using DbTestHarness.Commands;
 using DbTestHarness.Infrastructure;
 using DbTestHarness.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +10,7 @@ var app = new CommandApp(registrar);
 
 // DI registrations
 var userConfig = await UserConfig.FromConfigDirectory();
-services.AddSingleton<UserConfig>(_ => userConfig);
+services.AddSingleton(_ => userConfig);
 services.AddSingleton<IRunner, SqlServerRunner>();
 services.AddSingleton<IRunner, DryRunner>();
 services.AddSingleton<RunnerFactory>();

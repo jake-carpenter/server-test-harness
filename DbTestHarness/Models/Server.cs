@@ -1,7 +1,14 @@
+using System.Text.Json.Serialization;
+
 namespace DbTestHarness.Models;
 
-public abstract record Server(string Name)
+
+[JsonPolymorphic]
+[JsonDerivedType(typeof(SqlServer), typeDiscriminator: "SqlServer")]
+public abstract record Server
 {
-    public abstract string GetStatusLabel(string groupName);
-    public abstract string GetOptionLabel();
+    public required string GroupName { get; init; }
+    public required string Instance { get; init; }
+    public required string Host { get; init; }
+    public abstract string Type { get; }
 }

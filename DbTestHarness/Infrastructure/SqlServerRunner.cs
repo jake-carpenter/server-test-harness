@@ -31,29 +31,29 @@ public class SqlServerRunner : IRunner
 
     public string GetProgressDescription(Server server)
     {
-        if (server is not SqlServerWithGroup sqlServer)
-            return server.Name;
+        if (server is not SqlServer sqlServer)
+            return server.Instance;
 
-        return $"[blue]{sqlServer.GroupName}[/] | [yellow]{sqlServer.Name}[/] | {sqlServer.Host}";
+        return $"[blue]{sqlServer.GroupName}[/] | [yellow]{sqlServer.Instance}[/] | {sqlServer.Host}";
     }
 
     public string GetResultDescription(Server server, RunResult result)
     {
-        if (server is not SqlServerWithGroup sqlServer)
-            return server.Name;
+        if (server is not SqlServer sqlServer)
+            return server.Instance;
 
         var (color, symbol) = result.Succeeded
             ? ("green", "✔")
             : ("red", "✘");
 
-        return $"[{color}]{symbol}[/] [blue]{sqlServer.GroupName}[/] | [yellow]{sqlServer.Name}[/] | {sqlServer.Host}";
+        return $"[{color}]{symbol}[/] [blue]{sqlServer.GroupName}[/] | [yellow]{sqlServer.Instance}[/] | {sqlServer.Host}";
     }
 
     public string GetExceptionDisplayLine(Server server)
     {
-        if (server is not SqlServerWithGroup sqlServer)
-            return server.Name;
+        if (server is not SqlServer sqlServer)
+            return server.Instance;
 
-        return $"[blue]{sqlServer.GroupName}[/] | [yellow]{sqlServer.Name}[/] | {sqlServer.Host}";
+        return $"[blue]{sqlServer.GroupName}[/] | [yellow]{sqlServer.Instance}[/] | {sqlServer.Host}";
     }
 }
