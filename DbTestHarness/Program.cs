@@ -12,6 +12,7 @@ var app = new CommandApp(registrar);
 services.AddSingleton<IRunner, SqlServerRunner>();
 services.AddSingleton<RunnerFactory>();
 services.AddSingleton<RunnerStatus>();
+services.AddSingleton<IConfigOutput, SqlServerConfigOutput>();
 
 app.Configure(cfg =>
 {

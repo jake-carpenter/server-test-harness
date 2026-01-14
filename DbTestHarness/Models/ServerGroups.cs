@@ -10,5 +10,10 @@ public class ServerGroups : Dictionary<string, ServerGroup>
             this[group.Key] = new ServerGroup(group.Key, orderedServers);
         }
     }
+
+    public IEnumerable<ServerGroup> ByType(string type)
+    {
+        return Values.Where(g => g.Type == type);
+    }
 }
 
