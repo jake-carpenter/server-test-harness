@@ -13,7 +13,7 @@
 *.userosscache
 *.sln.docstates
 *.sln.DotSettings
-
+.vscode/
 .idea/
 .serena/
 
