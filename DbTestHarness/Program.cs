@@ -25,6 +25,9 @@ app.Configure(cfg =>
 
     cfg.AddCommand<ConfigCommand>("config")
         .WithDescription("Display configuration.");
+
+    cfg.AddCommand<AddCommand>("add")
+        .WithDescription("Add a new SQL Server to the configuration file.");
 });
 
 await app.RunAsync(args);
