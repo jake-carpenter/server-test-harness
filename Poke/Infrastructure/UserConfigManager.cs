@@ -10,10 +10,9 @@ public class UserConfigManager
     private const string UnixDirectoryName = "poke";
     private const string ConfigFilename = "config.json";
 
-    private readonly JsonSerializerOptions _jsonOptions = new()
+    private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web)
     {
         WriteIndented = true,
-        PropertyNameCaseInsensitive = true
     };
 
     /// <summary>
