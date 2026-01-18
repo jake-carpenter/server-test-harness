@@ -6,8 +6,10 @@ namespace Poke.Config.Migrations;
 public class V1 : IMigration
 {
     public int From => 0;
+
     public int To => 1;
 
+    // Introduced the `Version` property.
     public JsonDocument Migrate(JsonDocument jsonDocument)
     {
         var config = jsonDocument.Deserialize<UserConfigV0>(AppJsonSerializer.Options);

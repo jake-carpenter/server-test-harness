@@ -4,10 +4,20 @@ using Spectre.Console;
 
 namespace Poke.Runners;
 
+/// <summary>
+/// Writes SQL Server configuration output to the console.
+/// </summary>
 public class SqlServerConfigOutput : IConfigOutput
 {
+    /// <summary>
+    /// The server type this output handles.
+    /// </summary>
     public string ServerType => "SqlServer";
 
+    /// <summary>
+    /// Writes formatted configuration output for SQL Server groups.
+    /// </summary>
+    /// <param name="groups">The server groups to output.</param>
     public void Write(IEnumerable<ServerGroup> groups)
     {
         var headerTextStyle = new Style(Color.Grey);
@@ -20,7 +30,8 @@ public class SqlServerConfigOutput : IConfigOutput
         grid.AddRow(
             new Text("Group", headerTextStyle),
             new Text("Instance", headerTextStyle),
-            new Text("Host", headerTextStyle));
+            new Text("Host", headerTextStyle)
+        );
 
         foreach (var group in groups)
         {
@@ -29,12 +40,10 @@ public class SqlServerConfigOutput : IConfigOutput
                 var server = group.Servers[index];
 
                 // Only show the group name on the first server in the group
-                var maybeGroupName = index == 0 ? new Text(server.GroupName, new Style(Color.Blue)) : new Text("");
+                var maybeGroupName =
+                    index == 0 ? new Text(server.GroupName, new Style(Color.Blue)) : new Text("");
 
-                grid.AddRow(
-                    maybeGroupName,
-                    new Text(server.Instance),
-                    new Text(server.Host));
+                grid.AddRow(maybeGroupName, new Text(server.Instance), new Text(server.Host));
             }
         }
 
@@ -44,8 +53,6 @@ public class SqlServerConfigOutput : IConfigOutput
             .Header("SQL Server connections")
             .Expand();
 
-
         AnsiConsole.Write(panel);
     }
 }
-

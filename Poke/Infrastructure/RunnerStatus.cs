@@ -4,8 +4,17 @@ using Spectre.Console;
 
 namespace Poke.Infrastructure;
 
+/// <summary>
+/// Coordinates runner execution and console progress output.
+/// </summary>
 public class RunnerStatus(RunnerFactory runnerFactory)
 {
+    /// <summary>
+    /// Starts execution for the selected servers.
+    /// </summary>
+    /// <param name="servers">The servers to execute.</param>
+    /// <param name="settings">The run settings.</param>
+    /// <returns>The process exit code.</returns>
     public async Task<int> Start(IReadOnlyCollection<Server> servers, RunSettings settings)
     {
         if (servers.Count == 0)
@@ -17,18 +26,19 @@ public class RunnerStatus(RunnerFactory runnerFactory)
 
         var results = new Dictionary<Server, RunResult>();
 
-        await AnsiConsole.Progress()
+        await AnsiConsole
+            .Progress()
             .AutoClear(false)
             .HideCompleted(false)
-            .Columns(
-                new SpinnerColumn(),
-                new TaskDescriptionColumn { Alignment = Justify.Left })
+            .Columns(new SpinnerColumn(), new TaskDescriptionColumn { Alignment = Justify.Left })
             .StartAsync(async ctx =>
             {
                 var progressTasks = ApplyTasks(ctx, servers, settings);
                 var tasks = servers
                     .Where(progressTasks.ContainsKey)
-                    .Select(server => ExecuteServerAsync(server, progressTasks[server], settings, results));
+                    .Select(server =>
+                        ExecuteServerAsync(server, progressTasks[server], settings, results)
+                    );
 
                 await Task.WhenAll(tasks);
             });
@@ -43,7 +53,11 @@ public class RunnerStatus(RunnerFactory runnerFactory)
         return hasFailure ? 1 : 0;
     }
 
-    private Dictionary<Server, ProgressTask> ApplyTasks(ProgressContext ctx, IReadOnlyCollection<Server> servers, RunSettings settings)
+    private Dictionary<Server, ProgressTask> ApplyTasks(
+        ProgressContext ctx,
+        IReadOnlyCollection<Server> servers,
+        RunSettings settings
+    )
     {
         var progressTasks = new Dictionary<Server, ProgressTask>();
         foreach (var server in servers)
@@ -61,7 +75,8 @@ public class RunnerStatus(RunnerFactory runnerFactory)
         Server server,
         ProgressTask progressTask,
         RunSettings settings,
-        Dictionary<Server, RunResult> results)
+        Dictionary<Server, RunResult> results
+    )
     {
         var runner = runnerFactory.GetRunner(server, settings);
         var result = await runner.Execute(server, settings);
@@ -76,7 +91,10 @@ public class RunnerStatus(RunnerFactory runnerFactory)
         progressTask.StopTask();
     }
 
-    private void DisplayExceptionSummary(Dictionary<Server, RunResult> results, RunSettings settings)
+    private void DisplayExceptionSummary(
+        Dictionary<Server, RunResult> results,
+        RunSettings settings
+    )
     {
         var exceptions = results
             .Where(kvp => kvp.Value is { Succeeded: false, Exception: not null })
@@ -94,7 +112,7 @@ public class RunnerStatus(RunnerFactory runnerFactory)
             var runner = runnerFactory.GetRunner(server, settings);
             var exceptionMessage = result.Exception?.Message ?? "Unknown error";
             var escapedMessage = Markup.Escape(exceptionMessage);
-            
+
             AnsiConsole.MarkupLine(runner.Formatter.FormatExceptionLine(server));
             AnsiConsole.WriteLine();
 

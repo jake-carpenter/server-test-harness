@@ -4,8 +4,16 @@ using Poke.Infrastructure;
 
 namespace Poke.Config;
 
+/// <summary>
+/// Applies migrations to bring the configuration file to the latest version.
+/// </summary>
 public class ConfigMigrator(JsonConfigFile configFile, IEnumerable<IMigration> migrators)
 {
+    /// <summary>
+    /// Check the configuration file and apply any missing migrations.
+    /// </summary>
+    /// <param name="filePath">The optional user-provided configuration file path. The default path is used if not provided.</param>
+    /// <returns>The configuration object.</returns>
     public async Task<UserConfig> ExecuteMigrations(string? filePath)
     {
         var currentJson = await configFile.ReadAsJson(filePath);

@@ -4,6 +4,9 @@ using Spectre.Console;
 
 namespace Poke.Config;
 
+/// <summary>
+/// A class for managing the JSON configuration file.
+/// </summary>
 public class JsonConfigFile
 {
     private const string WindowsDirectoryName = "Poke";
@@ -23,6 +26,12 @@ public class JsonConfigFile
         await WriteFile(filePath, jsonDocument);
     }
 
+    /// <summary>
+    /// Ensures the configuration file exists by creating it if it doesn't.
+    /// </summary>
+    /// <param name="filePath">The full path to the configuration file. If not provided, the platform-specific default path is used.</param>
+    /// <param name="create">A function to create the configuration object.</param>
+    /// <returns>The task result.</returns>
     public async Task EnsureExists(string? filePath, Func<UserConfig> create)
     {
         filePath ??= GetConfigFilePath();
@@ -40,6 +49,11 @@ public class JsonConfigFile
         await WriteFile(filePath, jsonDocument);
     }
 
+    /// <summary>
+    /// Reads the configuration file as a <see cref="JsonDocument"/>.
+    /// </summary>
+    /// <param name="filePath">The full path to the configuration file. If not provided, the platform-specific default path is used.</param>
+    /// <returns>The <see cref="JsonDocument"/> instance.</returns>
     public async Task<JsonDocument> ReadAsJson(string? filePath)
     {
         filePath ??= GetConfigFilePath();
@@ -61,6 +75,7 @@ public class JsonConfigFile
     {
         try
         {
+            // Using `File.Create` to ensure an existing file is overwritten.
             await using var stream = File.Create(filePath);
             await using var writer = new Utf8JsonWriter(stream, _jsonWriterOptions);
 
@@ -85,9 +100,7 @@ public class JsonConfigFile
         {
             // If it's a directory, combine with filename
             if (Directory.Exists(customConfigPath) || !Path.HasExtension(customConfigPath))
-            {
                 return Path.Combine(customConfigPath, ConfigFilename);
-            }
 
             // Otherwise, assume it's a full file path
             return customConfigPath;
@@ -122,6 +135,7 @@ public class JsonConfigFile
             Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
             ".config"
         );
+
         return Path.Combine(configDir, UnixDirectoryName);
     }
 }
