@@ -15,7 +15,11 @@ public class SqlServerFormatter : IRunnerFormatter
     /// <returns>The formatted progress line.</returns>
     public string FormatInProgressLine(Server server)
     {
-        return $"[blue]{server.GroupName}[/] | [yellow]{server.Instance}[/] | {server.Host}";
+        if (server is not SqlServer sqlServer)
+            return string.Empty;
+
+        var dataSource = sqlServer.DataSource;
+        return $"[blue]{server.GroupName}[/] | [yellow]{server.Instance}[/] | {dataSource}";
     }
 
     /// <summary>
@@ -27,8 +31,12 @@ public class SqlServerFormatter : IRunnerFormatter
     public string FormatResultLine(Server server, RunResult result)
     {
         var (color, symbol) = result.Succeeded ? ("green", "✔") : ("red", "✘");
+        if (server is not SqlServer sqlServer)
+            return string.Empty;
 
-        return $"[{color}]{symbol}[/] [blue]{server.GroupName}[/] | [yellow]{server.Instance}[/] | {server.Host}";
+        var dataSource = sqlServer.DataSource;
+
+        return $"[{color}]{symbol}[/] [blue]{server.GroupName}[/] | [yellow]{server.Instance}[/] | {dataSource}";
     }
 
     /// <summary>
@@ -38,6 +46,10 @@ public class SqlServerFormatter : IRunnerFormatter
     /// <returns>The formatted exception line.</returns>
     public string FormatExceptionLine(Server server)
     {
-        return $"[blue]{server.GroupName}[/] | [yellow]{server.Instance}[/] | {server.Host}";
+        if (server is not SqlServer sqlServer)
+            return string.Empty;
+
+        var dataSource = sqlServer.DataSource;
+        return $"[blue]{server.GroupName}[/] | [yellow]{server.Instance}[/] | {dataSource}";
     }
 }

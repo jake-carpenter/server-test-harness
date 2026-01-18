@@ -21,11 +21,6 @@ public abstract record Server
     public required string Instance { get; init; }
 
     /// <summary>
-    /// The host name or IP address of the server.
-    /// </summary>
-    public required string Host { get; init; }
-
-    /// <summary>
     /// The server type discriminator.
     /// </summary>
     public abstract string Type { get; }

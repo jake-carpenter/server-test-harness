@@ -31,10 +31,7 @@ public class SqlServerRunner : IRunner
         if (settings.DryRun)
             return RunResult.Success();
 
-        const string template =
-            "Data Source={0};TrustServerCertificate=True;Trusted_Connection=Yes;";
-        var connectionString = string.Format(template, sqlServer.Host);
-        await using var connection = new SqlConnection(connectionString);
+        await using var connection = new SqlConnection(sqlServer.ConnectionString);
 
         try
         {

@@ -38,12 +38,18 @@ public class SqlServerConfigOutput : IConfigOutput
             for (var index = 0; index < group.Servers.Length; index++)
             {
                 var server = group.Servers[index];
+                if (server is not SqlServer sqlServer)
+                    continue;
 
                 // Only show the group name on the first server in the group
                 var maybeGroupName =
                     index == 0 ? new Text(server.GroupName, new Style(Color.Blue)) : new Text("");
 
-                grid.AddRow(maybeGroupName, new Text(server.Instance), new Text(server.Host));
+                grid.AddRow(
+                    maybeGroupName,
+                    new Text(server.Instance),
+                    new Text(sqlServer.DataSource)
+                );
             }
         }
 

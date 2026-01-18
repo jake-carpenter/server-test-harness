@@ -19,6 +19,7 @@ services.AddSingleton<ConfigManager>();
 services.AddSingleton<ConfigMigrator>();
 services.AddSingleton<IConfigOutput, SqlServerConfigOutput>();
 services.AddSingleton<IMigration, V1>();
+services.AddSingleton<IMigration, V2>();
 
 app.Configure(cfg =>
 {
