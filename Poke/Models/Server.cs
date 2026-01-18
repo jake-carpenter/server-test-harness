@@ -3,7 +3,6 @@ using Poke.Runners;
 
 namespace Poke.Models;
 
-
 [JsonPolymorphic]
 [JsonDerivedType(typeof(SqlServer), typeDiscriminator: "SqlServer")]
 public abstract record Server

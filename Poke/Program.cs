@@ -1,7 +1,9 @@
-﻿using Poke.Commands;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Poke.Commands;
+using Poke.Config;
+using Poke.Config.Migrations;
 using Poke.Infrastructure;
 using Poke.Runners;
-using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console.Cli;
 
 var services = new ServiceCollection();
@@ -12,8 +14,11 @@ var app = new CommandApp(registrar);
 services.AddSingleton<IRunner, SqlServerRunner>();
 services.AddSingleton<RunnerFactory>();
 services.AddSingleton<RunnerStatus>();
-services.AddSingleton<UserConfigManager>();
+services.AddSingleton<JsonConfigFile>();
+services.AddSingleton<ConfigManager>();
+services.AddSingleton<ConfigMigrator>();
 services.AddSingleton<IConfigOutput, SqlServerConfigOutput>();
+services.AddSingleton<IMigration, V1>();
 
 app.Configure(cfg =>
 {
@@ -25,12 +30,10 @@ app.Configure(cfg =>
     cfg.AddCommand<AllCommand>("all")
         .WithDescription("Run all configured servers without selection.");
 
-    cfg.AddCommand<ConfigCommand>("config")
-        .WithDescription("Display configuration.");
+    cfg.AddCommand<ConfigCommand>("config").WithDescription("Display configuration.");
 
     cfg.AddCommand<AddCommand>("add")
         .WithDescription("Add a new SQL Server to the configuration file.");
-
 });
 
 await app.RunAsync(args);

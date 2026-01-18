@@ -1,3 +1,4 @@
+using Poke.Config;
 using Poke.Infrastructure;
 using Poke.Models;
 using Spectre.Console;
@@ -5,14 +6,16 @@ using Spectre.Console.Cli;
 
 namespace Poke.Commands;
 
-public class SelectCommand(RunnerStatus runnerStatus) : AsyncCommand<RunSettings>
+public class SelectCommand(RunnerStatus runnerStatus, ConfigManager configManager)
+    : AsyncCommand<RunSettings>
 {
     public override async Task<int> ExecuteAsync(
         CommandContext context,
         RunSettings settings,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
-        var config = settings.GetConfig();
+        var config = await configManager.Read(settings.ConfigFile);
         var selected = AnsiConsole.Prompt(BuildPromptWithGroups(config.Servers));
         var servers = selected.OfType<ServerOption>().Select(x => x.Server).ToArray();
         var result = await runnerStatus.Start(servers, settings);
@@ -20,10 +23,11 @@ public class SelectCommand(RunnerStatus runnerStatus) : AsyncCommand<RunSettings
         return result;
     }
 
-    private static MultiSelectionPrompt<ISelectionOption> BuildPromptWithGroups(IReadOnlyCollection<Server> servers)
+    private static MultiSelectionPrompt<ISelectionOption> BuildPromptWithGroups(
+        IReadOnlyCollection<Server> servers
+    )
     {
-        const string instructions =
-            """
+        const string instructions = """
             Press [blue]<space>[/] to select an option
             Press [green]<enter>[/] to accept
             Press [red]<cmd+c>[/] to cancel
@@ -35,12 +39,14 @@ public class SelectCommand(RunnerStatus runnerStatus) : AsyncCommand<RunSettings
             .Required()
             .InstructionsText(instructions)
             .HighlightStyle(new Style(Color.Blue, decoration: Decoration.Bold))
-            .UseConverter(opt => opt switch
-            {
-                ServerOption serverOption => $"[grey]{serverOption.Label}[/]",
-                GroupOption groupOption => $"[yellow]{groupOption.Label}[/]",
-                _ => opt.Label
-            });
+            .UseConverter(static opt =>
+                opt switch
+                {
+                    ServerOption serverOption => $"[grey]{serverOption.Label}[/]",
+                    GroupOption groupOption => $"[yellow]{groupOption.Label}[/]",
+                    _ => opt.Label,
+                }
+            );
 
         foreach (var group in servers.GroupBy((s) => s.GroupName))
         {

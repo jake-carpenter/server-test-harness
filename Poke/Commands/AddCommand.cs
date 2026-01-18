@@ -1,28 +1,29 @@
-using Poke.Infrastructure;
-using Poke.Models;
+using Poke.Config;
 using Poke.Runners;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Poke.Commands;
 
-public class AddCommand(UserConfigManager configManager) : AsyncCommand<AddSettings>
+public class AddCommand(ConfigManager configManager) : AsyncCommand<AddSettings>
 {
     public override async Task<int> ExecuteAsync(
         CommandContext context,
         AddSettings settings,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
-        var config = settings.GetConfig();
+        var config = await configManager.Read(settings.ConfigFile);
         var newServer = PromptForSettings(settings);
         var serversList = config.Servers.ToList();
 
         serversList.Add(newServer);
-        config = new UserConfig { Servers = [.. serversList] };
-        await configManager.SaveConfigAsync(config, settings.ConfigFile);
+        config = config with { Servers = [.. serversList] };
+        await configManager.Save(config, settings.ConfigFile);
 
         AnsiConsole.MarkupLineInterpolated(
-            $"[green]✓[/] Successfully added SQL Server: [yellow]{newServer.Host}[/] / [yellow]{newServer.Instance}[/] to group [yellow]{newServer.GroupName}[/]");
+            $"[green]✓[/] Successfully added SQL Server: [yellow]{newServer.Host}[/] / [yellow]{newServer.Instance}[/] to group [yellow]{newServer.GroupName}[/]"
+        );
 
         return 0;
     }
@@ -37,7 +38,7 @@ public class AddCommand(UserConfigManager configManager) : AsyncCommand<AddSetti
         {
             GroupName = PromptIfMissing(settings.Group, "Group Name", "Group name cannot be empty"),
             Host = PromptIfMissing(settings.Host, "Host", "Host cannot be empty"),
-            Instance = PromptIfMissing(settings.Instance, "Instance", "Instance cannot be empty")
+            Instance = PromptIfMissing(settings.Instance, "Instance", "Instance cannot be empty"),
         };
     }
 
@@ -51,8 +52,11 @@ public class AddCommand(UserConfigManager configManager) : AsyncCommand<AddSetti
         return AnsiConsole.Prompt(
             new TextPrompt<string>($"[green]{promptLabel}:[/]")
                 .PromptStyle("yellow")
-                .Validate(input => !string.IsNullOrWhiteSpace(input)
-                    ? ValidationResult.Success()
-                    : ValidationResult.Error($"[red]{errorMessage}[/]")));
+                .Validate(input =>
+                    !string.IsNullOrWhiteSpace(input)
+                        ? ValidationResult.Success()
+                        : ValidationResult.Error($"[red]{errorMessage}[/]")
+                )
+        );
     }
 }
