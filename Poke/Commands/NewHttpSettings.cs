@@ -6,7 +6,7 @@ namespace Poke.Commands;
 /// <summary>
 /// Settings for adding an HTTP Server entry via the 'new http' command.
 /// </summary>
-public sealed class AddHttpSettings : BaseSettings
+public sealed class NewHttpSettings : BaseSettings
 {
     /// <summary>
     /// The group name for the HTTP Server.

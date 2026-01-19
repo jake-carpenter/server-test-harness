@@ -9,11 +9,11 @@ namespace Poke.Commands;
 /// <summary>
 /// Command for adding an HTTP Server entry via the 'new http' command.
 /// </summary>
-public class AddHttpCommand(ConfigManager configManager) : AsyncCommand<AddHttpSettings>
+public class NewHttpCommand(ConfigManager configManager) : AsyncCommand<NewHttpSettings>
 {
     public override async Task<int> ExecuteAsync(
         CommandContext context,
-        AddHttpSettings settings,
+        NewHttpSettings settings,
         CancellationToken cancellationToken
     )
     {
@@ -39,7 +39,7 @@ public class AddHttpCommand(ConfigManager configManager) : AsyncCommand<AddHttpS
         return 0;
     }
 
-    private static Result<HttpServer> CreateServer(AddHttpSettings settings)
+    private static Result<HttpServer> CreateServer(NewHttpSettings settings)
     {
         AnsiConsole.MarkupLine("[bold cyan]Add New HTTP Server[/]");
         AnsiConsole.WriteLine();

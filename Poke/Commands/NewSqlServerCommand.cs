@@ -9,15 +9,15 @@ namespace Poke.Commands;
 /// <summary>
 /// Command for adding a SQL Server entry via the 'new sqlserver' command.
 /// </summary>
-public class AddSqlServerCommand(ConfigManager configManager, SqlServerFormatter formatter)
-    : AsyncCommand<AddSqlServerSettings>
+public class NewSqlServerCommand(ConfigManager configManager, SqlServerFormatter formatter)
+    : AsyncCommand<NewSqlServerSettings>
 {
     private const string InputModeConnectionString = "Connection String";
     private const string InputModeIndividualDetails = "Individual Details (Data Source)";
 
     public override async Task<int> ExecuteAsync(
         CommandContext context,
-        AddSqlServerSettings settings,
+        NewSqlServerSettings settings,
         CancellationToken cancellationToken
     )
     {
@@ -34,7 +34,7 @@ public class AddSqlServerCommand(ConfigManager configManager, SqlServerFormatter
         return 0;
     }
 
-    private static SqlServer CreateServer(AddSqlServerSettings settings)
+    private static SqlServer CreateServer(NewSqlServerSettings settings)
     {
         // Connection string takes precedence if provided
         if (!string.IsNullOrWhiteSpace(settings.ConnectionString))
@@ -56,7 +56,7 @@ public class AddSqlServerCommand(ConfigManager configManager, SqlServerFormatter
             : CreateFromIndividualDetails(settings);
     }
 
-    private static SqlServer CreateFromConnectionString(AddSqlServerSettings settings)
+    private static SqlServer CreateFromConnectionString(NewSqlServerSettings settings)
     {
         var connectionString = settings.ConnectionString;
 
@@ -92,7 +92,7 @@ public class AddSqlServerCommand(ConfigManager configManager, SqlServerFormatter
         };
     }
 
-    private static SqlServer CreateFromIndividualDetails(AddSqlServerSettings settings)
+    private static SqlServer CreateFromIndividualDetails(NewSqlServerSettings settings)
     {
         AnsiConsole.MarkupLine("[bold cyan]Add New SQL Server[/]");
         AnsiConsole.WriteLine();

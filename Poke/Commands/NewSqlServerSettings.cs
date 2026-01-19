@@ -6,7 +6,7 @@ namespace Poke.Commands;
 /// <summary>
 /// Settings for adding a SQL Server entry via the 'new sqlserver' command.
 /// </summary>
-public sealed class AddSqlServerSettings : BaseSettings
+public sealed class NewSqlServerSettings : BaseSettings
 {
     /// <summary>
     /// The group name for the SQL Server.
