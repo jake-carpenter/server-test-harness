@@ -12,6 +12,7 @@ var app = new CommandApp(registrar);
 
 // DI registrations
 services.AddSingleton<IRunner, SqlServerRunner>();
+services.AddSingleton<IRunner, HttpServerRunner>();
 services.AddSingleton<RunnerFactory>();
 services.AddSingleton<RunnerStatus>();
 services.AddSingleton<JsonConfigFile>();

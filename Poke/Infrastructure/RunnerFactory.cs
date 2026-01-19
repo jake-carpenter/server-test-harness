@@ -20,6 +20,7 @@ public class RunnerFactory(IEnumerable<IRunner> runners)
         IRunner? runner = server switch
         {
             SqlServer => runners.OfType<SqlServerRunner>().FirstOrDefault(),
+            HttpServer => runners.OfType<HttpServerRunner>().FirstOrDefault(),
             _ => throw new NotSupportedException(
                 $"No runner available for server type: {server.GetType().Name}"
             ),
