@@ -18,6 +18,7 @@ services.AddSingleton<JsonConfigFile>();
 services.AddSingleton<ConfigManager>();
 services.AddSingleton<ConfigMigrator>();
 services.AddSingleton<IConfigOutput, SqlServerConfigOutput>();
+services.AddSingleton<IConfigOutput, HttpServerConfigOutput>();
 services.AddSingleton<IMigration, V1>();
 services.AddSingleton<IMigration, V2>();
 
