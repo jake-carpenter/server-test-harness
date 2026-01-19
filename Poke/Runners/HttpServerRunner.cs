@@ -55,6 +55,6 @@ public class HttpServerRunner : IRunner
 
     private static HttpMessageHandler CreateHandler(HttpServer httpServer)
     {
-        return httpServer.SkipSslCert ? new InsecureHttpClientHandler() : new HttpClientHandler();
+        return httpServer.Insecure ? new InsecureHttpClientHandler() : new HttpClientHandler();
     }
 }

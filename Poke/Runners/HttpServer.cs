@@ -16,7 +16,7 @@ public record HttpServer : Server
     /// <summary>
     /// Whether to skip SSL certificate validation.
     /// </summary>
-    public bool SkipSslCert { get; init; }
+    public bool Insecure { get; init; }
 
     /// <summary>
     /// The server type discriminator.

@@ -47,7 +47,7 @@ public class HttpServerConfigOutput : IConfigOutput
                 var maybeGroupName =
                     index == 0 ? new Text(server.GroupName, new Style(Color.Blue)) : new Text("");
 
-                var insecureText = httpServer.SkipSslCert
+                var insecureText = httpServer.Insecure
                     ? new Text("Yes", new Style(Color.Yellow))
                     : new Text("No");
 
