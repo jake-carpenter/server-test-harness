@@ -7,18 +7,14 @@ namespace Poke.Config;
 /// <summary>
 /// A class for managing the JSON configuration file.
 /// </summary>
-public class JsonConfigFile
+public class JsonConfigFile : IConfigFile
 {
     private const string WindowsDirectoryName = "Poke";
     private const string UnixDirectoryName = "poke";
     private const string ConfigFilename = "config.json";
     private readonly JsonWriterOptions _jsonWriterOptions = new() { Indented = true };
 
-    /// <summary>
-    /// Saves the configuration to the specified file path.
-    /// </summary>
-    /// <param name="jsonDocument">The JSON document to save</param>
-    /// <param name="filePath">The full path to the configuration file. If not provided, the platform-specific default path is used.</param>
+    /// <inheritdoc />
     public async Task SaveFile(JsonDocument jsonDocument, string? filePath = null)
     {
         filePath ??= GetConfigFilePath(filePath);
@@ -26,12 +22,7 @@ public class JsonConfigFile
         await WriteFile(filePath, jsonDocument);
     }
 
-    /// <summary>
-    /// Ensures the configuration file exists by creating it if it doesn't.
-    /// </summary>
-    /// <param name="filePath">The full path to the configuration file. If not provided, the platform-specific default path is used.</param>
-    /// <param name="create">A function to create the configuration object.</param>
-    /// <returns>The task result.</returns>
+    /// <inheritdoc />
     public async Task EnsureExists(string? filePath, Func<UserConfig> create)
     {
         filePath ??= GetConfigFilePath();
@@ -49,11 +40,7 @@ public class JsonConfigFile
         await WriteFile(filePath, jsonDocument);
     }
 
-    /// <summary>
-    /// Reads the configuration file as a <see cref="JsonDocument"/>.
-    /// </summary>
-    /// <param name="filePath">The full path to the configuration file. If not provided, the platform-specific default path is used.</param>
-    /// <returns>The <see cref="JsonDocument"/> instance.</returns>
+    /// <inheritdoc />
     public async Task<JsonDocument> ReadAsJsonDocument(string? filePath)
     {
         filePath ??= GetConfigFilePath();
@@ -65,7 +52,7 @@ public class JsonConfigFile
         return await JsonDocument.ParseAsync(stream);
     }
 
-    private void EnsureDirectoryExists(string filePath)
+    private static void EnsureDirectoryExists(string filePath)
     {
         var directory = Path.GetDirectoryName(filePath);
         if (directory is null)

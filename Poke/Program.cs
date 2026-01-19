@@ -15,12 +15,12 @@ services.AddSingleton<IRunner, SqlServerRunner>();
 services.AddSingleton<IRunner, HttpServerRunner>();
 services.AddSingleton<RunnerFactory>();
 services.AddSingleton<RunnerStatus>();
-services.AddSingleton<JsonConfigFile>();
 services.AddSingleton<ConfigManager>();
 services.AddSingleton<ConfigMigrator>();
 services.AddSingleton<SqlServerFormatter>();
 services.AddSingleton<IConfigOutput, SqlServerConfigOutput>();
 services.AddSingleton<IConfigOutput, HttpServerConfigOutput>();
+services.AddSingleton<IConfigFile, JsonConfigFile>();
 services.AddSingleton<IMigration, V1>();
 services.AddSingleton<IMigration, V2>();
 

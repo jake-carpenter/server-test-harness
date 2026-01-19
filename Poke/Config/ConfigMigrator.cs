@@ -7,7 +7,7 @@ namespace Poke.Config;
 /// <summary>
 /// Applies migrations to bring the configuration file to the latest version.
 /// </summary>
-public class ConfigMigrator(JsonConfigFile configFile, IEnumerable<IMigration> migrators)
+public class ConfigMigrator(IConfigFile configFile, IEnumerable<IMigration> migrators)
 {
     /// <summary>
     /// Check the configuration file and apply any missing migrations.

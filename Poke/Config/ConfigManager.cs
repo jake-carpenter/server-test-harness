@@ -5,7 +5,7 @@ namespace Poke.Config;
 /// <summary>
 /// Coordinates reading and writing the user configuration with migrations.
 /// </summary>
-public class ConfigManager(JsonConfigFile configFile, ConfigMigrator migrator)
+public class ConfigManager(IConfigFile configFile, ConfigMigrator migrator)
 {
     /// <summary>
     /// Reads the configuration from the specified file path, both creating the file
