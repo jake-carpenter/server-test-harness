@@ -7,7 +7,7 @@ namespace Poke.Runners;
 /// <summary>
 /// Writes HTTP Server configuration output to the console.
 /// </summary>
-public class HttpServerConfigOutput : IConfigOutput
+public class HttpServerConfigOutput(IAnsiConsole console) : IConfigOutput
 {
     /// <summary>
     /// The server type this output handles.
@@ -66,6 +66,6 @@ public class HttpServerConfigOutput : IConfigOutput
             .Header("HTTP Server connections")
             .Expand();
 
-        AnsiConsole.Write(panel);
+        console.Write(panel);
     }
 }

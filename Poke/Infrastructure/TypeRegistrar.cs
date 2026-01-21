@@ -47,6 +47,6 @@ public sealed class TypeRegistrar(IServiceCollection services) : ITypeRegistrar
         if (func is null)
             throw new ArgumentNullException(nameof(func));
 
-        services.AddSingleton(service, func);
+        services.AddSingleton(service, _ => func());
     }
 }
