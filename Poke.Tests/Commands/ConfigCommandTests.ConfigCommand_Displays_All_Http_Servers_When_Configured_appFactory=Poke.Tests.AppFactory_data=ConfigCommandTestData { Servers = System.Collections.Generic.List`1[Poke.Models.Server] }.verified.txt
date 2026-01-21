@@ -1,0 +1,9 @@
+╭─HTTP Server connections──────────────────────────────────────────────────────╮
+│        Group      Instance           URI                      Insecure       │
+│ Test Group 1      Test 1 Instance    https://example1.com/    No             │
+│                   Test 3 Instance    https://example3.com/    No             │
+│ Test Group 2      Test 2 Instance    https://example2.com/    No             │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─SQL Server connections───────────────────────────────────────────────────────╮
+│ Group      Instance    Host                                                  │
+╰──────────────────────────────────────────────────────────────────────────────╯

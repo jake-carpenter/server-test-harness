@@ -7,7 +7,7 @@ namespace Poke.Runners;
 /// <summary>
 /// Writes SQL Server configuration output to the console.
 /// </summary>
-public class SqlServerConfigOutput : IConfigOutput
+public class SqlServerConfigOutput(IAnsiConsole console) : IConfigOutput
 {
     /// <summary>
     /// The server type this output handles.
@@ -59,6 +59,6 @@ public class SqlServerConfigOutput : IConfigOutput
             .Header("SQL Server connections")
             .Expand();
 
-        AnsiConsole.Write(panel);
+        console.Write(panel);
     }
 }

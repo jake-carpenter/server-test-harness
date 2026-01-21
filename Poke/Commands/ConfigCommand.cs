@@ -6,8 +6,11 @@ using Spectre.Console.Cli;
 
 namespace Poke.Commands;
 
-public class ConfigCommand(IEnumerable<IConfigOutput> writers, ConfigManager configManager)
-    : AsyncCommand<BaseSettings>
+public class ConfigCommand(
+    IEnumerable<IConfigOutput> writers,
+    ConfigManager configManager,
+    IAnsiConsole console
+) : AsyncCommand<BaseSettings>
 {
     public override async Task<int> ExecuteAsync(
         CommandContext context,
@@ -18,7 +21,7 @@ public class ConfigCommand(IEnumerable<IConfigOutput> writers, ConfigManager con
         var config = await configManager.Read(settings.ConfigFile);
         if (config.Servers.Count == 0)
         {
-            AnsiConsole.MarkupLine("[red]No servers configured.[/]");
+            console.MarkupLine("[red]No servers configured.[/]");
             return 1;
         }
 

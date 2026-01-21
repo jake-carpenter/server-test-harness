@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Spectre.Console.Cli.Testing" Version="1.0.0-alpha.0.12" />
+    <PackageReference Include="Spectre.Console.Testing" Version="0.54.*" />
+    <PackageReference Include="TUnit" Version="1.12.15" />
+    <PackageReference Include="Verify.TUnit" Version="31.9.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Poke\Poke.csproj" />
+  </ItemGroup>
+</Project>
