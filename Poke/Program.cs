@@ -23,6 +23,7 @@ services.AddSingleton<IConfigOutput, HttpServerConfigOutput>();
 services.AddSingleton<IConfigFile, JsonConfigFile>();
 services.AddSingleton<IMigration, V1>();
 services.AddSingleton<IMigration, V2>();
+services.AddSingleton<IMigration, V3>();
 
 app.Configure(cfg =>
 {

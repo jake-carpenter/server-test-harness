@@ -12,6 +12,11 @@ namespace Poke.Models;
 public abstract record Server
 {
     /// <summary>
+    /// The (generated) unique identifier for the server.
+    /// </summary>
+    public required Guid Id { get; init; }
+
+    /// <summary>
     /// The group name the server belongs to.
     /// </summary>
     public required string GroupName { get; init; }

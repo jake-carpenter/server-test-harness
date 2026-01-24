@@ -86,6 +86,7 @@ public class NewSqlServerCommand(ConfigManager configManager, SqlServerFormatter
 
         return new SqlServer
         {
+            Id = Guid.NewGuid(),
             GroupName = PromptIfMissing(settings.Group, "Group Name", "Group name cannot be empty"),
             Instance = PromptIfMissing(settings.Instance, "Instance", "Instance cannot be empty"),
             ConnectionString = builder.ConnectionString,
@@ -112,6 +113,7 @@ public class NewSqlServerCommand(ConfigManager configManager, SqlServerFormatter
 
         return new SqlServer
         {
+            Id = Guid.NewGuid(),
             GroupName = PromptIfMissing(settings.Group, "Group Name", "Group name cannot be empty"),
             Instance = PromptIfMissing(settings.Instance, "Instance", "Instance cannot be empty"),
             ConnectionString = builder.ConnectionString,
