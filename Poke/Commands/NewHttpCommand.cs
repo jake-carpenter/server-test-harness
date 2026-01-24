@@ -50,6 +50,7 @@ public class NewHttpCommand(ConfigManager configManager) : AsyncCommand<NewHttpS
 
         return new HttpServer
         {
+            Id = Guid.NewGuid(),
             GroupName = PromptIfMissing(settings.Group, "Group Name", "Group name cannot be empty"),
             Instance = PromptIfMissing(settings.Instance, "Instance", "Instance cannot be empty"),
             Uri = uri!,

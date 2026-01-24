@@ -50,6 +50,7 @@ public class AddCommand(ConfigManager configManager) : AsyncCommand<AddSettings>
 
         var server = new SqlServer
         {
+            Id = Guid.NewGuid(),
             GroupName = PromptIfMissing(settings.Group, "Group Name", "Group name cannot be empty"),
             ConnectionString = builder.ConnectionString,
             Instance = PromptIfMissing(settings.Instance, "Instance", "Instance cannot be empty"),
